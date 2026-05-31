@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceNow CSA Benchmark - Vancouver Edition</title>
+    <style>
+        :root { --sn-dark: #293e40; --sn-green: #81b5a1; --sn-light: #f4f7f6; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; line-height: 1.6; color: #333; max-width: 950px; margin: 0 auto; padding: 20px; background-color: var(--sn-light); }
+        .header { background-color: var(--sn-dark); color: white; padding: 30px; border-radius: 8px; margin-bottom: 20px; text-align: center; }
+        
+        /* Instructions Section */
+        .instructions-box { background: white; padding: 20px; border-radius: 8px; border: 1px solid #ddd; margin-bottom: 30px; border-left: 5px solid var(--sn-green); }
+        .instructions-box h2 { margin-top: 0; color: var(--sn-dark); }
+        
+        .question-card { background: white; padding: 25px; margin-bottom: 25px; border-radius: 8px; box-shadow: 0 2px 5px rgba(0,0,0,0.1); border-left: 5px solid #ccc; transition: 0.3s; }
+        .difficulty { font-size: 0.75em; font-weight: bold; text-transform: uppercase; padding: 4px 10px; border-radius: 12px; margin-bottom: 12px; display: inline-block; }
+        .low { background-color: #d4edda; color: #155724; }
+        .medium { background-color: #fff3cd; color: #856404; }
+        .high { background-color: #f8d7da; color: #721c24; }
+        
+        .options { list-style: none; padding: 0; margin-top: 15px; }
+        .options li { margin: 10px 0; padding: 10px; border: 1px solid #eee; border-radius: 6px; display: flex; align-items: center; cursor: pointer; }
+        input[type="radio"] { margin-right: 15px; }
+        
+        #resultsArea { display: none; margin-top: 40px; padding: 30px; background: white; border-radius: 8px; }
+        .screenshot-guide { background: #eef2f3; padding: 15px; border-radius: 6px; margin-bottom: 20px; font-size: 0.9em; border: 1px dashed #999; }
+        
+        /* Compact View Styles */
+        .compact-row { display: grid; grid-template-columns: 80px 1fr 100px; padding: 10px; border-bottom: 1px solid #eee; font-size: 0.9em; }
+        .compact-header { font-weight: bold; background: #eee; }
+        .status-correct { color: green; font-weight: bold; }
+        .status-incorrect { color: red; font-weight: bold; }
+
+        button { background-color: var(--sn-dark); color: white; border: none; padding: 15px 30px; border-radius: 6px; cursor: pointer; font-weight: bold; margin: 10px; }
+        button.secondary { background-color: #666; }
+        .controls { text-align: center; margin-top: 20px; }
+        
+        .hidden { display: none; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>ServiceNow CSA Pre-Assessment</h1>
+    <p>Vancouver Release Benchmark</p>
+</div>
+
+<div class="instructions-box" id="intro">
+    <h2>Welcome, Intern!</h2>
+    <p><strong>Purpose:</strong> This test is designed to evaluate your <strong>current entry-level knowledge</strong> of the ServiceNow platform as you begin your 10-week journey. Don't worry if you don't know every answer yet—this is a baseline to help us tailor your learning.</p>
+    <ul>
+        <li><strong>Focus:</strong> Entry-level platform administration, UI navigation, and core data concepts.</li>
+        <li><strong>Format:</strong> 20 Multiple Choice Questions based on the Vancouver release.</li>
+        <li><strong>Next Steps:</strong> Upon completion, you will be shown your results and instructions on how to share them with your supervisor.</li>
+    </ul>
+    <button onclick="document.getElementById('intro').classList.add('hidden'); document.getElementById('quizForm').classList.remove('hidden');">Start Assessment</button>
+</div>
+
+<form id="quizForm" class="hidden">
+    <div id="questionsContainer"></div>
+    <div class="controls">
+        <button type="button" onclick="calculateResults()">Submit Assessment</button>
+    </div>
+</form>
+
+<div id="resultsArea">
+    <div class="screenshot-guide">
+        <strong>📸 How to share your results:</strong><br>
+        1. Click "Switch to Summary View" below to make the results shorter.<br>
+        2. <strong>Windows:</strong> Press <code>Win + Shift + S</code> and drag across the summary.<br>
+        3. <strong>Mac:</strong> Press <code>Cmd + Shift + 4</code> and drag across the summary.<br>
+        4. Send the image/screenshot to your supervisor.
+    </div>
+
+    <div id="scoreSummary" style="font-size: 24px; font-weight: bold; text-align: center; margin-bottom: 20px;"></div>
+    
+    <div class="controls">
+        <button type="button" onclick="showDetailed()">Detailed Review (For Study)</button>
+        <button type="button" class="secondary" onclick="showCompact()">Summary View (For Screenshot)</button>
+    </div>
+
+    <div id="detailedReview"></div>
+    <div id="compactReview" class="hidden">
+        <div class="compact-row compact-header">
+            <div>Q#</div><div>Result</div><div>Correct Ans</div>
+        </div>
+        <div id="compactList"></div>
+    </div>
+</div>
+
+<script>
+    // [The 20 Questions from the previous version remain the same here]
+    const questions = [
+        { id: 1, diff: 'low', text: "In the Vancouver Next Experience, where does a user go to see their recently viewed records and favorites?", options: ["A) The History and Favorites tabs in the Unified Navigation header.", "B) The System Log module.", "C) The Gear icon on the form header.", "D) The User Group dashboard."], ans: "A", exp: "Vancouver uses Unified Navigation. Favorites and History are now menus at the top of the screen." },
+        { id: 2, diff: 'medium', text: "An intern needs to ensure that the 'Assignment Group' is mandatory only when the 'State' is 'In Progress'. Which tool is best for this UI requirement?", options: ["A) Data Policy", "B) UI Policy", "C) Client Script", "D) Business Rule"], ans: "B", exp: "UI Policies are used for client-side form behavior like visibility and mandatory requirements." },
+        { id: 3, diff: 'low', text: "Which ServiceNow table stores all individual user records?", options: ["A) sys_user_group", "B) sys_user", "C) user_list", "D) core_company"], ans: "B", exp: "The sys_user table is the foundation for all identity management in ServiceNow." },
+        { id: 4, diff: 'high', text: "Scenario: You are importing data and want to prevent the creation of duplicate records. If the 'Email' matches an existing record, update it; otherwise, create a new one. What do you set the 'Email' field to?", options: ["A) Mandatory", "B) Indexed", "C) Coalesce", "D) Unique"], ans: "C", exp: "Coalesce fields act as a unique key to determine if a record should be updated or created during an import." },
+        { id: 5, diff: 'medium', text: "What runs on the server side and can be used to display an error message that stops a user from saving a record?", options: ["A) UI Script", "B) UI Action", "C) Business Rule", "D) Client Script"], ans: "C", exp: "A 'Before' Business Rule can use 'setAbortAction(true)' to prevent database writes." },
+        { id: 6, diff: 'low', text: "Which module is used to change the branding, such as the company logo and color scheme, for the entire instance?", options: ["A) Basic Configuration UI16", "B) Guided Setup", "C) Theme Builder", "D) Form Designer"], ans: "C", exp: "In Vancouver, Theme Builder is the primary tool for branding the Next Experience UI." },
+        { id: 7, diff: 'medium', text: "Which of the following is a collection of permissions used to grant access to applications and modules?", options: ["A) Group", "B) Profile", "C) Role", "D) Department"], ans: "C", exp: "Roles are assigned to users or groups to grant access rights." },
+        { id: 8, diff: 'high', text: "An ACL (Access Control) is failing for a user. The ACL has a Role requirement, a Condition, and a Script. Which must be true?", options: ["A) Only the Role", "B) Any one of the three", "C) The Role and either the Condition or Script", "D) All three (Role, Condition, and Script)"], ans: "D", exp: "ACL evaluation requires all three components to evaluate to true." },
+        { id: 9, diff: 'low', text: "In the Service Catalog, what creates a single task-based record (like an Incident) from a front-end form?", options: ["A) Order Guide", "B) Record Producer", "C) Catalog Item", "D) Content Item"], ans: "B", exp: "Record Producers create records on task tables via the Service Portal." },
+        { id: 10, diff: 'medium', text: "What is the primary table for the Configuration Management Database (CMDB)?", options: ["A) cmdb_ci", "B) cmdb_rel_ci", "C) task_cmdb", "D) asset_list"], ans: "A", exp: "cmdb_ci is the base table for all Configuration Items." },
+        { id: 11, diff: 'low', text: "A user wants to filter a list of Incidents to show only those with a 'High' priority. Where do they click?", options: ["A) The Filter Icon (Funnel)", "B) The Gear Icon", "C) The Hamburger Menu", "D) The Magnifying Glass"], ans: "A", exp: "The Filter Icon opens the Condition Builder for list filtering." },
+        { id: 12, diff: 'high', text: "You need to move a new Table and five Business Rules from Dev to Production. What tool should you use?", options: ["A) Import Sets", "B) Export to CSV", "C) Update Sets", "D) Data Loader"], ans: "C", exp: "Update Sets capture configuration changes to move between instances." },
+        { id: 13, diff: 'medium', text: "Which tool provides a graphical interface for building a process sequence from triggers to actions?", options: ["A) Workflow Editor", "B) Flow Designer", "C) Process Engine", "D) Script Include"], ans: "B", exp: "Flow Designer is the modern tool for process automation in Vancouver." },
+        { id: 14, diff: 'low', text: "What do you call the area that shows the history of comments and work notes on a form?", options: ["A) Activity Stream", "B) Audit Log", "C) Notes Section", "D) Journal Field"], ans: "A", exp: "The Activity Stream displays the chronological history of interactions." },
+        { id: 15, diff: 'medium', text: "What is the purpose of a 'Knowledge Base'?", options: ["A) To store passwords", "B) To organize and store 'How-to' articles", "C) To keep a list of hardware", "D) To track software licenses"], ans: "B", exp: "Knowledge Bases store articles that help users resolve issues via self-service." },
+        { id: 16, diff: 'high', text: "Which of the following describes a 'Reference' field?", options: ["A) A field for numbers", "B) A field that links to a record on another table", "C) A read-only field", "D) A dropdown list"], ans: "B", exp: "Reference fields store the SysID of a record on another table." },
+        { id: 17, diff: 'low', text: "What is the 'Global Search' used for?", options: ["A) Searching users", "B) Searching records across multiple tables", "C) Searching the internet", "D) Searching code"], ans: "B", exp: "Global Search finds records across the platform from the header." },
+        { id: 18, diff: 'medium', text: "An administrator wants to limit which countries can see a Knowledge Article. What should they use?", options: ["A) UI Policies", "B) User Criteria", "C) Client Scripts", "D) Catalog Categories"], ans: "B", exp: "User Criteria controls who can access Knowledge or Catalog items." },
+        { id: 19, diff: 'high', text: "In a 'One-to-Many' relationship, which field type points from the child to the parent?", options: ["A) String field", "B) Choice field", "C) Reference field", "D) Journal field"], ans: "C", exp: "A Reference field creates the link between tables." },
+        { id: 20, diff: 'medium', text: "What is the correct order of the 'Load Data' process?", options: ["A) Map -> Load -> Run", "B) Load -> Map -> Run", "C) Run -> Load -> Map", "D) Import Set -> Target -> Load"], ans: "B", exp: "Load to staging first, then map fields, then run the transform." }
+    ];
+
+    function initQuiz() {
+        const container = document.getElementById('questionsContainer');
+        questions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.innerHTML = `
+                <div class="question-card">
+                    <span class="difficulty ${q.diff}">Difficulty: ${q.diff}</span>
+                    <p><strong>${index + 1}. ${q.text}</strong></p>
+                    <ul class="options">
+                        ${q.options.map((opt, i) => `<li><input type="radio" name="q${q.id}" value="${opt[0]}"> ${opt}</li>`).join('')}
+                    </ul>
+                </div>`;
+            container.appendChild(card);
+        });
+    }
+
+    function calculateResults() {
+        let score = 0;
+        let detailedHtml = "";
+        let compactHtml = "";
+
+        questions.forEach(q => {
+            const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+            const userAns = selected ? selected.value : "None";
+            const isCorrect = userAns === q.ans;
+            if (isCorrect) score++;
+
+            detailedHtml += `
+                <div class="question-card ${isCorrect ? 'correct' : 'incorrect'}">
+                    <p><strong>Q${q.id}: ${isCorrect ? 'Correct' : 'Incorrect'}</strong></p>
+                    <p>Your Ans: ${userAns} | Correct: ${q.ans}</p>
+                    <p style="font-size: 0.9em; color: #555;">${q.exp}</p>
+                </div>`;
+            
+            compactHtml += `
+                <div class="compact-row">
+                    <div>Q${q.id}</div>
+                    <div class="${isCorrect ? 'status-correct' : 'status-incorrect'}">${isCorrect ? 'CORRECT' : 'WRONG'}</div>
+                    <div>${q.ans}</div>
+                </div>`;
+        });
+
+        document.getElementById('scoreSummary').innerText = `Score: ${score} / 20`;
+        document.getElementById('detailedReview').innerHTML = detailedHtml;
+        document.getElementById('compactList').innerHTML = compactHtml;
+        document.getElementById('quizForm').classList.add('hidden');
+        document.getElementById('resultsArea').style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    function showDetailed() {
+        document.getElementById('detailedReview').classList.remove('hidden');
+        document.getElementById('compactReview').classList.add('hidden');
+    }
+
+    function showCompact() {
+        document.getElementById('detailedReview').classList.add('hidden');
+        document.getElementById('compactReview').classList.remove('hidden');
+    }
+
+    window.onload = initQuiz;
+</script>
+</body>
+</html>

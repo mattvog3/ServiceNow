@@ -1,0 +1,21 @@
+Q#,Correct Answer,Topic / Domain,Difficulty
+1,A,User Interface & Navigation,Low
+2,B,UI Policies vs. Data Policies,Medium
+3,B,User Administration (sys_user),Low
+4,C,Data Management (Import Sets),High
+5,B,Client-Side Scripting,Medium
+6,C,Branding & Theme Builder,Low
+7,B,Security (Group-Based Permissions),Medium
+8,D,Security (ACL Evaluation),High
+9,B,Service Catalog (Record Producers),Low
+10,B,CMDB & Configuration Items,Medium
+11,B,Lists & Filters (Condition Builder),Low
+12,A,Application Administration (Update Sets),High
+13,C,Service Automation (Flow Designer),Medium
+14,A,Collaboration (Activity Stream),Low
+15,B,Knowledge Management,Medium
+16,B,Data Schema (Reference Fields),High
+17,B,Global Search,Low
+18,B,Service Catalog (User Criteria),Medium
+19,B,Data Schema (Relationships),High
+20,B,Data Management (Import Sequence),Medium

@@ -1,0 +1,248 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceNow AIT 2026 Cohort #37 - Benchmark</title>
+    <style>
+        :root { 
+            --sn-blue-dark: #1a3a5f; 
+            --sn-blue-medium: #2c5282;
+            --sn-blue-light: #ebf4ff; 
+            --sn-accent: #4299e1;
+        }
+        body { 
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; 
+            line-height: 1.6; 
+            color: #2d3748; 
+            max-width: 950px; 
+            margin: 0 auto; 
+            padding: 20px; 
+            background-color: var(--sn-blue-light); 
+        }
+        .header { 
+            background-color: var(--sn-blue-dark); 
+            color: white; 
+            padding: 40px 20px; 
+            border-radius: 12px; 
+            margin-bottom: 25px; 
+            text-align: center; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        .header h1 { margin: 0; font-size: 28px; letter-spacing: 1px; }
+        .header p { margin: 10px 0 0; opacity: 0.9; font-weight: 300; }
+        
+        .instructions-box { 
+            background: white; 
+            padding: 25px; 
+            border-radius: 12px; 
+            border: 1px solid #cbd5e0; 
+            margin-bottom: 30px; 
+            border-top: 6px solid var(--sn-accent); 
+        }
+        .instructions-box h2 { margin-top: 0; color: var(--sn-blue-dark); }
+        
+        .question-card { 
+            background: white; 
+            padding: 25px; 
+            margin-bottom: 25px; 
+            border-radius: 12px; 
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05); 
+            border-left: 6px solid #cbd5e0; 
+            transition: transform 0.2s; 
+        }
+        .difficulty { 
+            font-size: 0.75em; 
+            font-weight: bold; 
+            text-transform: uppercase; 
+            padding: 4px 12px; 
+            border-radius: 20px; 
+            margin-bottom: 15px; 
+            display: inline-block; 
+        }
+        .low { background-color: #c6f6d5; color: #22543d; }
+        .medium { background-color: #feebc8; color: #744210; }
+        .high { background-color: #fed7d7; color: #822727; }
+        
+        .options { list-style: none; padding: 0; margin-top: 15px; }
+        .options li { 
+            margin: 12px 0; 
+            padding: 14px; 
+            border: 1px solid #e2e8f0; 
+            border-radius: 8px; 
+            display: flex; 
+            align-items: center; 
+            cursor: pointer; 
+            transition: all 0.2s;
+        }
+        .options li:hover { background-color: #f7fafc; border-color: var(--sn-accent); }
+        input[type="radio"] { margin-right: 15px; transform: scale(1.3); }
+        
+        #resultsArea { display: none; margin-top: 40px; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 10px 15px rgba(0,0,0,0.1); }
+        .screenshot-guide { background: #edf2f7; padding: 20px; border-radius: 8px; margin-bottom: 25px; font-size: 0.95em; border: 2px dashed var(--sn-blue-medium); color: var(--sn-blue-dark); }
+        
+        .compact-row { display: grid; grid-template-columns: 80px 1fr 100px; padding: 12px; border-bottom: 1px solid #edf2f7; }
+        .compact-header { font-weight: bold; background: var(--sn-blue-dark); color: white; border-radius: 4px 4px 0 0; }
+        .status-correct { color: #38a169; font-weight: bold; }
+        .status-incorrect { color: #e53e3e; font-weight: bold; }
+
+        button { 
+            background-color: var(--sn-blue-medium); 
+            color: white; 
+            border: none; 
+            padding: 16px 32px; 
+            border-radius: 8px; 
+            cursor: pointer; 
+            font-weight: bold; 
+            font-size: 16px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+        button:hover { background-color: var(--sn-blue-dark); transform: translateY(-1px); }
+        button.secondary { background-color: #718096; margin-left: 10px; }
+        .controls { text-align: center; padding: 20px 0; }
+        
+        .hidden { display: none; }
+        .correct { border-left-color: #48bb78 !important; }
+        .incorrect { border-left-color: #f56565 !important; }
+    </style>
+</head>
+<body>
+
+<div class="header">
+    <h1>ServiceNow AIT 2026 Cohort #37</h1>
+    <p>Foundational Administration Benchmark | Vancouver Release</p>
+</div>
+
+<div class="instructions-box" id="intro">
+    <h2>Welcome to Cohort #37!</h2>
+    <p>This assessment is your first step in the 10-week program. We are testing <strong>entry-level knowledge</strong> to establish a baseline for your training. Complete the 20 questions to the best of your ability.</p>
+    <ul>
+        <li><strong>Release:</strong> Vancouver Edition</li>
+        <li><strong>Focus:</strong> Navigation, Core Tables, Security, and Automation.</li>
+        <li><strong>Sharing:</strong> You will be asked to provide a screenshot of your results summary at the end.</li>
+    </ul>
+    <div style="text-align: center; margin-top: 20px;">
+        <button onclick="document.getElementById('intro').classList.add('hidden'); document.getElementById('quizForm').classList.remove('hidden');">Begin Assessment</button>
+    </div>
+</div>
+
+<form id="quizForm" class="hidden">
+    <div id="questionsContainer"></div>
+    <div class="controls">
+        <button type="button" onclick="calculateResults()">Submit Final Answers</button>
+    </div>
+</form>
+
+<div id="resultsArea">
+    <div class="screenshot-guide">
+        <strong>📸 Reporting Instructions:</strong><br>
+        1. Click <strong>"Switch to Summary View"</strong> to compress your results.<br>
+        2. Capture a screenshot (<code>Win+Shift+S</code> or <code>Cmd+Shift+4</code>).<br>
+        3. Email the screenshot to your cohort lead.
+    </div>
+
+    <div id="scoreSummary" style="font-size: 26px; font-weight: bold; text-align: center; color: var(--sn-blue-dark); margin-bottom: 25px;"></div>
+    
+    <div class="controls">
+        <button type="button" onclick="showDetailed()">Detailed Study View</button>
+        <button type="button" class="secondary" onclick="showCompact()">Summary View (Screenshot)</button>
+    </div>
+
+    <div id="detailedReview"></div>
+    <div id="compactReview" class="hidden">
+        <div class="compact-row compact-header">
+            <div>Q#</div><div>Result</div><div>Correct</div>
+        </div>
+        <div id="compactList"></div>
+    </div>
+</div>
+
+<script>
+    // Full 20 Questions (Vancouver Specific)
+    const questions = [
+        { id: 1, diff: 'low', text: "In the Vancouver Next Experience, where are 'Favorites' and 'History' located?", options: ["A) The Unified Navigation header menus.", "B) The bottom status bar.", "C) The System Settings gear icon.", "D) Hidden by default in the Profile menu."], ans: "A", exp: "Unified Navigation consolidates All, Favorites, and History in the top header." },
+        { id: 2, diff: 'medium', text: "Which tool allows an admin to make a field mandatory only on a specific form without affecting data imports?", options: ["A) Data Policy", "B) UI Policy", "C) Business Rule", "D) Dictionary Override"], ans: "B", exp: "UI Policies are client-side (form only). Data Policies are server-side (all inputs)." },
+        { id: 3, diff: 'low', text: "What is the technical name for the User table in ServiceNow?", options: ["A) user_admin", "B) sys_user", "C) core_user", "D) u_user_list"], ans: "B", exp: "The sys_user table stores all user records." },
+        { id: 4, diff: 'high', text: "During an import, which feature checks if a record already exists to prevent duplicates?", options: ["A) Mapping Assist", "B) Data Scrubbing", "C) Coalesce", "D) Staging Keys"], ans: "C", exp: "Coalesce fields determine if a record is updated or created." },
+        { id: 5, diff: 'medium', text: "Which script type runs on the browser when a field value changes?", options: ["A) Business Rule", "B) onChange Client Script", "C) onSubmit Client Script", "D) Script Include"], ans: "B", exp: "onChange Client Scripts execute immediately when a field is modified." },
+        { id: 6, diff: 'low', text: "In Vancouver, which tool is preferred for applying company colors and logos to the UI?", options: ["A) CSS Editor", "B) UI16 Configuration", "C) Theme Builder", "D) Branding Editor"], ans: "C", exp: "Theme Builder is the modern tool for Next Experience branding." },
+        { id: 7, diff: 'medium', text: "How should permissions be assigned to users per ServiceNow Best Practice?", options: ["A) Assign roles directly to users", "B) Add users to groups, then assign roles to groups", "C) Assign users to departments", "D) Grant admin access to everyone"], ans: "B", exp: "Assigning roles to groups is the most scalable administration method." },
+        { id: 8, diff: 'high', text: "To gain access via an ACL, what is evaluated?", options: ["A) Roles only", "B) Conditions only", "C) Roles, Conditions, and Scripts", "D) The user's VIP status"], ans: "C", exp: "All three (Roles, Conditions, Script) must be true for access." },
+        { id: 9, diff: 'low', text: "Which Catalog component allows users to create an Incident directly from the Portal?", options: ["A) Catalog Item", "B) Record Producer", "C) Order Guide", "D) Content Item"], ans: "B", exp: "Record Producers turn catalog inputs into task records." },
+        { id: 10, diff: 'medium', text: "What is the base table for all Configuration Items (CIs)?", options: ["A) cmdb", "B) cmdb_ci", "C) task", "D) base_ci"], ans: "B", exp: "cmdb_ci is the core table for CIs." },
+        { id: 11, diff: 'low', text: "Which icon is used to open the list filter (Condition Builder)?", options: ["A) Gear icon", "B) Funnel icon", "C) Magnifying glass", "D) Pencil icon"], ans: "B", exp: "The Funnel icon opens the filter breadcrumbs/builder." },
+        { id: 12, diff: 'high', text: "Which tool captures configuration changes for migration between instances?", options: ["A) Update Sets", "B) Data Sets", "C) Import Sets", "D) Export Sets"], ans: "A", exp: "Update Sets are used to move customizations from Dev to Test/Prod." },
+        { id: 13, diff: 'medium', text: "What is the primary no-code tool for building automated processes?", options: ["A) Workflow Editor", "B) Script Engine", "C) Flow Designer", "D) UI Builder"], ans: "C", exp: "Flow Designer is the modern automation standard." },
+        { id: 14, diff: 'low', text: "Where can you see a log of all emails sent from a record?", options: ["A) Activity Stream", "B) System Logs", "C) Sent Mail Folder", "D) Client History"], ans: "A", exp: "The Activity Stream tracks updates, comments, and sent emails." },
+        { id: 15, diff: 'medium', text: "What is a 'Knowledge Base'?", options: ["A) A database of all users", "B) A collection of self-service articles", "C) A list of system properties", "D) A backup of the instance"], ans: "B", exp: "Knowledge Bases help users find solutions independently." },
+        { id: 16, diff: 'high', text: "What defines a Reference Field?", options: ["A) It stores a text string", "B) It stores the SysID of a record on another table", "C) It is used only for dates", "D) It is a multi-select dropdown"], ans: "B", exp: "Reference fields create links between tables using SysIDs." },
+        { id: 17, diff: 'low', text: "Where is the Global Search located?", options: ["A) In the Filter Navigator", "B) In the header bar", "C) In the User Profile", "D) On the Service Portal only"], ans: "B", exp: "Global search is permanently in the top navigation header." },
+        { id: 18, diff: 'medium', text: "Which feature controls access to Service Catalog items?", options: ["A) ACLs", "B) User Criteria", "C) UI Actions", "D) Business Rules"], ans: "B", exp: "User Criteria defines 'Who can see' catalog items and categories." },
+        { id: 19, diff: 'high', text: "What is a 'Schema Map'?", options: ["A) A map of user locations", "B) A visual representation of table relationships", "C) A workflow diagram", "D) A guide for the UI theme"], ans: "B", exp: "Schema maps show how tables relate (parents/children/references)." },
+        { id: 20, diff: 'medium', text: "What is the correct sequence for importing data?", options: ["A) Map -> Load -> Run", "B) Load -> Map -> Run", "C) Run -> Load -> Map", "D) Map -> Run -> Load"], ans: "B", exp: "Load data to staging, create the map, then run the transform." }
+    ];
+
+    function initQuiz() {
+        const container = document.getElementById('questionsContainer');
+        questions.forEach((q, index) => {
+            const card = document.createElement('div');
+            card.innerHTML = `
+                <div class="question-card">
+                    <span class="difficulty ${q.diff}">${q.diff}</span>
+                    <p><strong>${index + 1}. ${q.text}</strong></p>
+                    <ul class="options">
+                        ${q.options.map((opt, i) => `<li><input type="radio" name="q${q.id}" value="${opt[0]}"> ${opt}</li>`).join('')}
+                    </ul>
+                </div>`;
+            container.appendChild(card);
+        });
+    }
+
+    function calculateResults() {
+        let score = 0;
+        let detailedHtml = "";
+        let compactHtml = "";
+
+        questions.forEach(q => {
+            const selected = document.querySelector(`input[name="q${q.id}"]:checked`);
+            const userAns = selected ? selected.value : "None";
+            const isCorrect = userAns === q.ans;
+            if (isCorrect) score++;
+
+            detailedHtml += `
+                <div class="question-card ${isCorrect ? 'correct' : 'incorrect'}">
+                    <p><strong>Q${q.id}: ${isCorrect ? '✅ Correct' : '❌ Incorrect'}</strong></p>
+                    <p>Your Ans: ${userAns} | Correct: ${q.ans}</p>
+                    <p style="font-size: 0.9em; color: #4a5568;"><em>Explanation: ${q.exp}</em></p>
+                </div>`;
+            
+            compactHtml += `
+                <div class="compact-row">
+                    <div>Q${q.id}</div>
+                    <div class="${isCorrect ? 'status-correct' : 'status-incorrect'}">${isCorrect ? 'PASS' : 'FAIL'}</div>
+                    <div>${q.ans}</div>
+                </div>`;
+        });
+
+        document.getElementById('scoreSummary').innerText = `Final Result: ${score} / 20`;
+        document.getElementById('detailedReview').innerHTML = detailedHtml;
+        document.getElementById('compactList').innerHTML = compactHtml;
+        document.getElementById('quizForm').classList.add('hidden');
+        document.getElementById('resultsArea').style.display = 'block';
+        window.scrollTo(0,0);
+    }
+
+    function showDetailed() {
+        document.getElementById('detailedReview').classList.remove('hidden');
+        document.getElementById('compactReview').classList.add('hidden');
+    }
+
+    function showCompact() {
+        document.getElementById('detailedReview').classList.add('hidden');
+        document.getElementById('compactReview').classList.remove('hidden');
+    }
+
+    window.onload = initQuiz;
+</script>
+</body>
+</html>
